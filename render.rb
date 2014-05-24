@@ -65,7 +65,7 @@ class Party
 end
 
 first = true
-CSV.foreach('btw2013.csv') do |row|
+CSV.foreach(ARGV[0]) do |row|
   if first then
     first = false
     row.each { |party_name| Party.new party_name }

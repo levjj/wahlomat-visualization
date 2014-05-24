@@ -15,3 +15,10 @@ Wenn zwei Parteien zur gleichen Frage unterschiedliche Antworten geben, dann kö
 Danach wurden die Daten mithilfe der Neato-Engine von [Graphviz](http://www.graphviz.org/) visualisiert. Der Code zur Generierung des Graphen ist in der Datei ``render.rb``, somit kann sich also jeder selbst seine Karte generieren um zum Beispiel bestimmte Parteien aus der Karte zu entfernen oder sich von der ordnungsgemäßen Durchführung zu überzeugen.
 
 Die Kreise sind die Parteien und die Linien spiegeln die Beziehungen der Parteien wieder, wobei längere Linien für größere Unterschiede im Antwortverhalten der Parteien auf Wahl-o-mat stehen. Die Interpretation der Grafik überlasse ich jedem selbst.
+
+3. Beispiele
+------------
+
+- Bundestagswahl 2009: `./render.rb btw2009.csv`
+- Bundestagswahl 2013: `./render.rb btw2013.csv`
+- Europawahl 2014: `./render.rb euro2014.csv`
