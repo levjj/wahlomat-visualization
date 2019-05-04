@@ -1,12 +1,12 @@
 #!/bin/env python3
 
-from typing import List
 import argparse
 import json
 import logging
 import os
 import subprocess
 import tempfile
+from typing import List
 from urllib import request
 
 REPO = 'https://raw.githubusercontent.com/gockelhahn/qual-o-mat-data'
