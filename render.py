@@ -26,6 +26,9 @@ class Party:
     else: # neutral
       self.answers[statement] = 0.5
 
+  def answer_normalized(self, statement: int, answer: float):
+    self.answers[statement] = answer * 20.0
+
   def similar(self, party) -> int:
     value = 0
     for index, answer in self.answers.items():
@@ -45,12 +48,15 @@ class Renderer:
       for party in json.load(response):
         self.parties[party['id']] = Party(party['id'], party['name'])
 
-  def load_answers(self):
+  def load_answers(self, normalized):
     logging.info('Requesting ' + self.prefix + '/opinion.json')
     with request.urlopen(self.prefix + '/opinion.json') as response:
       logging.info('Parsing response')
       for opinion in json.load(response):
-        self.parties[opinion['party']].answer(opinion['statement'], opinion['answer'])
+        if normalized:
+          self.parties[opinion['party']].answer_normalized(opinion['statement'], opinion['answer'])
+        else:
+          self.parties[opinion['party']].answer(opinion['statement'], opinion['answer'])
 
   def create_nodes(self, dotfile):
     for party in self.parties.values():
@@ -91,6 +97,9 @@ def main():
                       help='Destination for generated visualization (default: "wahlomat.png")')
   parser.add_argument('-v', '--verbose', dest='verbose', default=False, action="store_true",
                        help="Increase output verbosity")
+  parser.add_argument('--normalized', dest='normalized', default=False, action='store_true',
+                      help='Treat answers as normalized values between 0.0 and 1.0.' +
+                           'By default answers are expected to be one of positive (1), neutral(0) or negative(-1).')
   parser.add_argument('data', type=str,
                       help='Path to data in github.com/gockelhahn/qual-o-mat-data repository (e.g. 2019/europa)')
   args = parser.parse_args()
@@ -99,7 +108,7 @@ def main():
 
   renderer = Renderer(args.data)
   renderer.get_parties()
-  renderer.load_answers()
+  renderer.load_answers(args.normalized)
   renderer.render(args.neato, args.output)
   logging.info('Done')
 
