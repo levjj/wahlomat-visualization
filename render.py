@@ -38,19 +38,25 @@ class Party:
 class Renderer:
 
   def __init__(self, data_key):
-    self.prefix = REPO + '/master/data/' + data_key
+    self.data_key = data_key
     self.parties = dict()
 
+  def open_data(self, path):
+    if self.data_key[0] == ".":
+      logging.info('Opening file ' + self.data_key + path)
+      return open(self.data_key + path, "r")
+    else:
+      logging.info('Requesting ' + REPO + '/master/data/' + self.data_key + path)
+      return request.urlopen(REPO + '/master/data/' + self.data_key + path)
+
   def get_parties(self):
-    logging.info('Requesting ' + self.prefix + '/party.json')
-    with request.urlopen(self.prefix + '/party.json') as response:
+    with self.open_data('/party.json') as response:
       logging.info('Parsing response')
       for party in json.load(response):
         self.parties[party['id']] = Party(party['id'], party['name'])
 
   def load_answers(self, normalized):
-    logging.info('Requesting ' + self.prefix + '/opinion.json')
-    with request.urlopen(self.prefix + '/opinion.json') as response:
+    with self.open_data('/opinion.json') as response:
       logging.info('Parsing response')
       for opinion in json.load(response):
         if normalized:
@@ -101,7 +107,8 @@ def main():
                       help='Treat answers as normalized values between 0.0 and 1.0.' +
                            'By default answers are expected to be one of positive (1), neutral(0) or negative(-1).')
   parser.add_argument('data', type=str,
-                      help='Path to data in github.com/gockelhahn/qual-o-mat-data repository (e.g. 2019/europa)')
+                      help='Path to data in github.com/gockelhahn/qual-o-mat-data repository (e.g. 2019/europa).' +
+                           'If "data" starts with ".", it will treates as relative local path, e.g. "./lilliput".')
   args = parser.parse_args()
   if args.verbose:
     logging.basicConfig(level=logging.INFO)
