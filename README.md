@@ -35,22 +35,27 @@ Nutzung
 -------
 
 ```
-usage: render.py [-h] [-n NEATO] [-o OUTPUT] [-v] data
+usage: ./render.py [-h] [-n NEATO] [-o OUTPUT] [-v] [--normalized] data
 
 Visualize wahl-o-mat data.
 
 positional arguments:
   data                  Path to data in github.com/gockelhahn/qual-o-mat-data
-                        repository (e.g. 2019/europa)
+                        repository (e.g. 2019/europa).If "data" starts with
+                        ".", it will treates as relative local path, e.g.
+                        "./lilliput".
 
 optional arguments:
   -h, --help            show this help message and exit
   -n NEATO, --neatopath NEATO
                         Path to neato executable (default: "neato")
   -o OUTPUT, --output OUTPUT
-                        Destination for generated visualization
-                        (default: "wahlomat.png")
+                        Destination for generated visualization (default:
+                        "wahlomat.png")
   -v, --verbose         Increase output verbosity
+  --normalized          Treat answers as normalized values between 0.0 and
+                        1.0.By default answers are expected to be one of
+                        positive (1), neutral(0) or negative(-1).
 ```
 Beispiele
 ---------
